@@ -48,13 +48,13 @@ public class TransacaoController {
     @PostMapping("/transacao")
     public ResponseEntity<ApiResponse> transacaoController (@RequestBody(required = false) String json) throws JsonProcessingException, ParseException {
 
-        if (json == null || json.trim().isEmpty()) return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
+        if (json == null || json.trim().isEmpty()) throw new TransactionException(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
 
         TransacaoModel transacaoModel = objMapper.readValue(json,TransacaoModel.class);
 
         Boolean resultTransaction = this.transacaoService.transacao(transacaoModel);
 
-        if (!resultTransaction) return new ResponseEntity<>(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
+        if (!resultTransaction) throw new TransactionException(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
 
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED).getStatusCode());
 

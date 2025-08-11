@@ -4,6 +4,7 @@ package com.challenger.itau.Desafio.Itau.Model;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 @ToString
@@ -17,5 +18,13 @@ public class ListaTransacoesModel {
 
     public void removerTodasTransacoes(){
         this.transacaoModelList.clear();
+    }
+
+    // To do 
+    public void criandoEstatistica(int segundos){
+
+        // DoubleSummaryStatistics statistics = this.transacaoModelList
+        //                                                 .stream()
+        //                                                 .
     }
 }

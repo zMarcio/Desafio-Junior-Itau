@@ -1,6 +1,5 @@
 package com.challenger.itau.Desafio.Itau.Exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

@@ -1,7 +1,6 @@
 package com.challenger.itau.Desafio.Itau.Controller;
 
 import com.challenger.itau.Desafio.Itau.Exception.TransactionException;
-import com.challenger.itau.Desafio.Itau.Model.ListaTransacoesModel;
 import com.challenger.itau.Desafio.Itau.Model.TransacaoModel;
 import com.challenger.itau.Desafio.Itau.Service.TransacaoService;
 import com.challenger.itau.Desafio.Itau.Utils.ApiResponse;
@@ -46,7 +45,7 @@ public class TransacaoController {
     }
 
     @PostMapping("/transacao")
-    public ResponseEntity<ApiResponse> transacaoController (@RequestBody(required = false) String json) throws JsonProcessingException, ParseException {
+    public ResponseEntity<ApiResponse> transacaoPost (@RequestBody(required = false) String json) throws JsonProcessingException, ParseException {
 
         if (json == null || json.trim().isEmpty()) throw new TransactionException(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
 
@@ -57,7 +56,12 @@ public class TransacaoController {
         if (!resultTransaction) throw new TransactionException(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
 
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED).getStatusCode());
+    }
 
+    @DeleteMapping("/transacao")
+    public ResponseEntity<ApiResponse> transacaoDelete(){
+        transacaoService.deletaTransacao();
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK).getStatusCode());
     }
 
 }

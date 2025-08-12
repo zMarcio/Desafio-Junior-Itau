@@ -6,12 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.OffsetDateTime;
-import java.util.DoubleSummaryStatistics;
 
 @Service
 public class TransacaoService {
-
-
     private final ListaTransacoesModel lista = new ListaTransacoesModel();
 
     public Boolean transacao(TransacaoModel transacaoEnviada) throws ParseException {
@@ -36,5 +33,9 @@ public class TransacaoService {
     public boolean deletaTransacao() {
         this.lista.removerTodasTransacoes();
         return true;
+    }
+
+    public void limiteTempo(int segundos) {
+        this.lista.setSegundos(segundos);
     }
 }

@@ -64,4 +64,9 @@ public class TransacaoController {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK).getStatusCode());
     }
 
+    @PostMapping("/transacao/segundos")
+    public ResponseEntity<ApiResponse> segundosPost(@R json){
+        this.transacaoService.limiteTempo(0);
+    }
+
 }

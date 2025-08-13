@@ -52,32 +52,39 @@ public class TransacaoController {
     }
 
     @PostMapping("/transacao")
-    public ResponseEntity<ApiResponse> transacaoPost (@RequestBody(required = false) String json) throws JsonProcessingException, ParseException {
-            if (json.trim().isEmpty() || json == null) throw new TransactionException(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
-        try{
-            TransacaoModel transacaoModel = objMapper.readValue(json,TransacaoModel.class);
-            log.info(transacaoModel.toString());
-            Boolean resultTransaction = this.transacaoService.transacao(transacaoModel);
-            if (!resultTransaction) throw  new TransactionException(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
-            return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED).getStatusCode());
-        }catch (TransactionException e) {
-            log.info("Erro: " + e.toString());
-            throw new TransactionException(new ApiResponse(e.getStatusCode()).getStatusCode());
+    public ResponseEntity<Void> transacaoPost(@RequestBody(required = false) TransacaoModel transacaoModel) throws ParseException {
+
+        if (transacaoModel == null || transacaoModel.getValor() == null || transacaoModel.getDataHora() == null) {
+            throw new TransactionException(HttpStatus.BAD_REQUEST);
         }
+
+        if (transacaoModel.getValor().isNaN()) {
+            throw new TransactionException(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean resultTransaction = this.transacaoService.transacao(transacaoModel);
+
+        if (!resultTransaction) {
+            throw new TransactionException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        log.info(transacaoModel.toString());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+
     @DeleteMapping("/transacao")
-    public ResponseEntity<ApiResponse> transacaoDelete(){
+    public ResponseEntity<Void> transacaoDelete(){
         transacaoService.deletaTransacao();
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK).getStatusCode());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/transacao/segundos")
-    public ResponseEntity<ApiResponse> segundosPost(@RequestBody String json) throws JsonProcessingException {
+    public ResponseEntity<Void> segundosPost(@RequestBody String json) throws JsonProcessingException {
         JsonNode jsonNode = objMapper.readValue(json, JsonNode.class);
         log.info(String.valueOf(jsonNode.get("segundos")));
         this.transacaoService.limiteTempo(Integer.parseInt(String.valueOf(jsonNode.get("segundos"))));
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK).getStatusCode());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/estatistica")

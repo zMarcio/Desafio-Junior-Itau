@@ -24,4 +24,5 @@ public class TransacaoModel {
     @NonNull
     private OffsetDateTime dataTransacao;
 
+
 }

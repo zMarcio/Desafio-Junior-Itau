@@ -1,19 +1,26 @@
 package com.challenger.itau.Desafio.Itau.Controller;
 
 import com.challenger.itau.Desafio.Itau.Exception.TransactionException;
+import com.challenger.itau.Desafio.Itau.Model.EstatisticaModel;
+import com.challenger.itau.Desafio.Itau.Model.ListaTransacoesModel;
 import com.challenger.itau.Desafio.Itau.Model.TransacaoModel;
 import com.challenger.itau.Desafio.Itau.Service.TransacaoService;
 import com.challenger.itau.Desafio.Itau.Utils.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.text.ParseException;
 
+@Slf4j
 @Controller
 @RequestMapping("/api")
 public class TransacaoController {
@@ -46,16 +53,17 @@ public class TransacaoController {
 
     @PostMapping("/transacao")
     public ResponseEntity<ApiResponse> transacaoPost (@RequestBody(required = false) String json) throws JsonProcessingException, ParseException {
-
-        if (json == null || json.trim().isEmpty()) throw new TransactionException(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
-
-        TransacaoModel transacaoModel = objMapper.readValue(json,TransacaoModel.class);
-
-        Boolean resultTransaction = this.transacaoService.transacao(transacaoModel);
-
-        if (!resultTransaction) throw new TransactionException(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
-
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED).getStatusCode());
+            if (json.trim().isEmpty() || json == null) throw new TransactionException(new ApiResponse(HttpStatus.BAD_REQUEST).getStatusCode());
+        try{
+            TransacaoModel transacaoModel = objMapper.readValue(json,TransacaoModel.class);
+            log.info(transacaoModel.toString());
+            Boolean resultTransaction = this.transacaoService.transacao(transacaoModel);
+            if (!resultTransaction) throw  new TransactionException(new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY).getStatusCode());
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED).getStatusCode());
+        }catch (TransactionException e) {
+            log.info("Erro: " + e.toString());
+            throw new TransactionException(new ApiResponse(e.getStatusCode()).getStatusCode());
+        }
     }
 
     @DeleteMapping("/transacao")
@@ -65,8 +73,16 @@ public class TransacaoController {
     }
 
     @PostMapping("/transacao/segundos")
-    public ResponseEntity<ApiResponse> segundosPost(@R json){
-        this.transacaoService.limiteTempo(0);
+    public ResponseEntity<ApiResponse> segundosPost(@RequestBody String json) throws JsonProcessingException {
+        JsonNode jsonNode = objMapper.readValue(json, JsonNode.class);
+        log.info(String.valueOf(jsonNode.get("segundos")));
+        this.transacaoService.limiteTempo(Integer.parseInt(String.valueOf(jsonNode.get("segundos"))));
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK).getStatusCode());
+    }
+
+    @GetMapping("/estatistica")
+    public ResponseEntity<EstatisticaModel> transacaoGet() {
+        return ResponseEntity.ok(this.transacaoService.visualizaEstatistica());
     }
 
 }

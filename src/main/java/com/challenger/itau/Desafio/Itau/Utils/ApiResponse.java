@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ApiResponse {
     private HttpStatus statusCode;
-    private String mensagem;
+    private Object mensagem;
 
-    public ApiResponse(HttpStatus statusCode, String mensagem) {
+    public ApiResponse(HttpStatus statusCode, Object mensagem) {
         this.statusCode = statusCode;
         this.mensagem = mensagem;
     }

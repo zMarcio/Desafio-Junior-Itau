@@ -1,0 +1,108 @@
+{
+  "info": {
+    "_postman_id": "4c9f5bb4-5e4d-4c56-9c9c-aaaa11112222",
+    "name": "Desafio Itau API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção para testar a API de Transações e Estatísticas"
+  },
+  "item": [
+    {
+      "name": "Criar transação",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"valor\": 123.45,\n  \"dataHora\": \"2025-08-14T10:00:00-03:00\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/transacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "transacao"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Configurar janela (segundos)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"segundos\": 120\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/transacao/segundos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "transacao",
+            "segundos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar estatística",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/estatistica",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "estatistica"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Apagar todas as transações",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/transacao",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "transacao"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
